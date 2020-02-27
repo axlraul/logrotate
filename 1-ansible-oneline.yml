@@ -1,0 +1,36 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+  - name: check if logrotate SSMM-MF exists
+    copy:
+      content: |
+             {
+               compress
+               rotate 90
+             }
+      dest: /etc/logrotate.d/SSMM-MF-COMPRESS
+      force: no 
+      group: sys
+      owner: root
+      mode: 0644
+
+  - name: check if boot.log exists at filesystem
+    stat:
+      path: /var/log/boot.log
+    register: bootPath
+
+#  - name: check if boot.log exists at logrotate SSMM-MF-COMPRESS file
+#    lineinfile: 
+#      path: /etc/logrotate.d/SSMM-MF-COMPRESS
+#      line: /var/log/boot.log
+#    register: bootInFile
+#    when: bootPath.stat.exists == True
+
+  - name: add path to SSMM-MF-COMPRESS if exists
+    lineinfile: 
+      path: /etc/logrotate.d/SSMM-MF-COMPRESS
+      regexp: '^/var/log/boot.log' 
+      line: '/var/log/boot.log'
+      insertbefore: '^{' 
+    when: bootPath.stat.exists == True
