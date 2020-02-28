@@ -1,0 +1,38 @@
+---
+# tasks file for logrotatefix
+
+  - name: check if logrotate SSMM-MF exists
+    copy:
+      content: |
+             ## CONTENT ADMINISTRATED BY SSMM-MF ANSIBLE PLAYBOOK. ALL CHANGES WILL BE LOST
+             {
+               compress
+               rotate 90
+             }
+      dest: /etc/logrotate.d/SSMM-MF-COMPRESS
+      force: no
+      group: sys
+      owner: root
+      mode: 0644
+
+  - name: check if log file exists at filesystem
+    stat:
+      path: "{{ item }}"
+    with_items: "{{ paths }}"
+    register: bootPath
+
+  - debug: var=bootPath
+
+  - name: check if .log exists at logrotate SSMM-MF-COMPRESS file
+    lineinfile:
+      path: /etc/logrotate.d/SSMM-MF-COMPRESS
+      line: "{{ item.stat.path }}????"
+      insertbefore: '^{'
+      create: no
+    when: item.stat.exists == true
+    loop: "{{ bootPath.results }}"
+
+
+
+
+
