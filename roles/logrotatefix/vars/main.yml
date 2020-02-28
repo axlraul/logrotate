@@ -1,0 +1,6 @@
+---
+# vars file for logrotatefix
+ paths:
+   - /var/log/boot.log
+   - /var/log/dmesg
+
