@@ -1,6 +1,31 @@
 ---
 # vars file for logrotatefix
  paths:
-   - /var/log/boot.log
-   - /var/log/dmesg
+   - path: 	/var/log/boot.log
+     wildcard: 	/var/log/boot.log-????????
+
+   - path:	/var/log/dmesg
+     wildcard: 	/var/log/dmesg-????????
+
+   - path: 	/var/log/cron
+     wildcard: 	/var/log/cron-????????
+
+   - path: 	/var/log/maillog
+     wildcard: 	/var/log/maillog-????????
+
+   - path: 	/var/log/secure
+     wildcard: 	/var/log/secure-????????
+
+   - path: 	/var/log/spooler
+     wildcard: 	/var/log/spooler-????????
+ 
+   - path: 	/var/log/httpd/access_log
+     wildcard: 	/var/log/httpd/access_log-????????
+ 
+   - path: 	/var/log/httpd/error_log
+     wildcard:	/var/log/httpd/error_log-????????
+
+   - path:      /var/log/btmp
+     wildcard:  /var/log/btmp-????????
+
 

@@ -17,22 +17,19 @@
 
   - name: check if log file exists at filesystem
     stat:
-      path: "{{ item }}"
+      path: "{{ item.path }}"
     with_items: "{{ paths }}"
     register: bootPath
 
-  - debug: var=bootPath
+  - debug: var=item.item['wildcard']
+    with_items: "{{ bootPath.results }}"
 
   - name: check if .log exists at logrotate SSMM-MF-COMPRESS file
     lineinfile:
       path: /etc/logrotate.d/SSMM-MF-COMPRESS
-      line: "{{ item.stat.path }}????"
+      line: "{{ item.item.wildcard }}"
       insertbefore: '^{'
       create: no
     when: item.stat.exists == true
-    loop: "{{ bootPath.results }}"
-
-
-
-
-
+    with_items: "{{ bootPath.results }}"
+...
