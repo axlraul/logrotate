@@ -4,29 +4,31 @@
   - name: check if logrotate SSMM-MF exists
     copy:
       content: |
-             ## CONTENT ADMINISTRATED BY SSMM-MF ANSIBLE PLAYBOOK. ALL CHANGES WILL BE LOST
+             ## CONTENT ADMINISTRATED BY {{ team }} ANSIBLE PLAYBOOK. ALL CHANGES WILL BE LOST
              {
                compress
                rotate 90
              }
-      dest: /etc/logrotate.d/SSMM-MF-COMPRESS
+      dest: '/etc/logrotate.d/{{ team }}-{{ logrotateName }}'
       force: no
       group: sys
       owner: root
       mode: 0644
+    register: var
 
+  - debug: var=var
   - name: check if log file exists at filesystem
     stat:
       path: "{{ item.path }}"
     with_items: "{{ paths }}"
     register: bootPath
 
-  - debug: var=item.item['wildcard']
-    with_items: "{{ bootPath.results }}"
+#  - debug: var=item.item['wildcard']
+#    with_items: "{{ bootPath.results }}"
 
   - name: check if .log exists at logrotate SSMM-MF-COMPRESS file
     lineinfile:
-      path: /etc/logrotate.d/SSMM-MF-COMPRESS
+      path: "{{ var.dest }}"
       line: "{{ item.item.wildcard }}"
       insertbefore: '^{'
       create: no
