@@ -6,8 +6,10 @@
       content: |
              ## CONTENT ADMINISTRATED BY {{ team }} ANSIBLE PLAYBOOK. ALL CHANGES WILL BE LOST
              {
+               hourly
                compress
                rotate 90
+               dateformat -%Y%m%d-%s
              }
       dest: '/etc/logrotate.d/{{ team }}-{{ logrotateName }}'
       force: no
