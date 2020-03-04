@@ -2,9 +2,12 @@
 # vars file for logrotatefix
 
  team: 'SSMM-MF'
+
  logrotateName: 'LOGROTATE-CUSTOM'
 
- paths:
+ forceMode: 'yes'
+
+ logs:
    - path: 	/var/log/boot.log
      wildcard: 	/var/log/boot.log-????????
 
