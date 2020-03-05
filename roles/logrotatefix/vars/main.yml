@@ -7,6 +7,13 @@
 
  forceMode: 'yes'
 
+ logrotateOptions:
+   - option: 'rotate 90'
+   - option: 'compress'
+   - option: 'daily'
+   - option: 'dateext'
+   - option: 'dateformat -%Y-%m-%d.log'
+
  logs:
    - path: 	/var/log/boot.log
      wildcard: 	/var/log/boot.log-????????

@@ -5,10 +5,8 @@
     copy:
       content: | 
              ## CONTENT ADMINISTRATED BY {{ team }} ANSIBLE PLAYBOOK. ALL CHANGES WILL BE LOST
+
              {
-             rotate 90
-             dateformat -%Y%m%d-%s
-             compress
              }
       dest: '/etc/logrotate.d/{{ team }}-{{ logrotateName }}'
       force: "{{ forceMode }}" 
@@ -27,12 +25,27 @@
 #  - debug: var=item.item['wildcard']
 #    with_items: "{{ bootPath.results }}"
 
-  - name: check if .log exists at logrotate SSMM-MF-COMPRESS file
+  - name: check if .log exists at logrotate {{ team }}-{{ logrotateName }} file
     lineinfile:
       path: "{{ var.dest }}"
       line: "{{ item.item.wildcard }}"
       insertbefore: '^{'
       create: no
-    when: item.stat.exists == true
+#    when: item.stat.exists == true
     with_items: "{{ bootPath.results }}"
+
+  - debug: var=logrotateOptions
+ 
+  - name: Adding options to logrotate {{ team }}-{{ logrotateName }} file
+    lineinfile:
+      path: "{{ var.dest }}"
+      line: "	{{ item.option }}"
+      insertbefore: '^}'
+      create: no
+    when: var.state == 'file'
+    with_items: "{{ logrotateOptions }}"
+
+  - debug:
+      msg: "{% if var.state == 'file' %} logrotate was succesfully installed at the following path {{ var.dest }}  {% else %} ERROR WAS DETECTED. PLEASE CHECK LOGROTATE FILE {{ var.dest }} OR vars/main.yml role variables {% endif %}"
+
 ...
