@@ -1,0 +1,40 @@
+
+## CONTENT ADMINISTRATED BY {{ team }} ANSIBLE PLAYBOOK. ALL CHANGES WILL BE LOST
+
+{% for item in bootPath.results %}
+{% if item.stat.exists == true %}
+  {{ item.item.path }}{{ item.item.wildcard }}
+{% endif %}
+{% endfor %}
+  {
+ 
+{% for item in logrotateOptions %}
+{% if 'rotate 0' == item.option %}
+rotate 1
+{% else %}
+{{ item.option }}
+{% endif %}
+{% endfor %}
+
+prerotate
+{% if historyDays %}
+{% for item in bootPath.results %}
+{% if item.stat.exists == true  %}
+     /usr/bin/find {{ item.item.path }} -name "{{ item.item.wildcard }}*.gz" -type f -mtime +{{ historyDays }} -exec rm -f {} \;
+{% endif %}
+{% endfor %}
+endscript
+
+{% endif %}
+{%if deleteEmptyRotated == true %}
+postrotate
+{% for item in bootPath.results %}
+{% if item.stat.exists == true and deleteEmptyRotated == true %}
+     /usr/bin/find {{ item.item.path }} -name "{{ item.item.wildcard }}" -type f -size 0b -exec rm -f {} \;
+{% endif %}
+{% endfor %}
+endscript
+{% endif %}
+
+   }
+
