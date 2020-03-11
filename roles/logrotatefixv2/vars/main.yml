@@ -1,0 +1,57 @@
+---
+# vars file for logrotatefix
+
+ team: 'SSMM-MF' 
+
+ logrotateName: 'LOGROTATE-CUSTOM'
+
+ forceMode: 'yes'
+ deleteEmptyRotated: 'true'
+
+ logrotateOptions:
+   - option: 'rotate 90'
+   - option: 'compress'
+   - option: 'daily'
+   - option: 'dateext'
+   - option: 'dateformat -%Y-%m-%d.log'
+
+ logs:
+   - path:	/var/log/
+     filename:	boot.log 
+     wildcard:	boot.log-????????
+
+   - path:	/var/log/
+     filename:	dmesg
+     wildcard:	dmesg-????????
+
+   - path:	/var/log/
+     filename:	cron
+     wildcard:	cron-????????
+
+   - path:	/var/log/
+     filename:	maillog
+     wildcard:	maillog-????????
+
+   - path:	/var/log/
+     filename:	secure
+     wildcard:	secure-????????
+
+   - path:	/var/log/
+     filename:	spooler
+     wildcard:	spooler-????????
+ 
+   - path:	/var/log/httpd/
+     filename:	access_log
+     wildcard:	/var/log/httpd/access_log-????????
+ 
+   - path:	/var/log/httpd/
+     filename:	error_log
+     wildcard:	error_log-????????
+
+   - path:	/var/log/
+     filename:	btmp
+     wildcard:	btmp-????????
+
+#   - path:	fakepath
+#     filename:	fakepath
+#     wildcard:	fakepath

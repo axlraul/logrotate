@@ -1,0 +1,16 @@
+---
+# tasks file for logrotatefix
+  - name: check if log file exists at filesystem
+    stat:
+      path: "{{ item.path }}{{ item.filename }}"
+    with_items: "{{ logs }}"
+    register: bootPath
+
+  - name: Installing logrotate at /etc/logrotate.d/{{ team }}-{{ logrotateName }}
+    template:
+      src: templates/logrotate.j2
+      dest: '/etc/logrotate.d/{{ team }}-{{ logrotateName }}'
+      group: sys
+      owner: root
+      mode: 0644
+...

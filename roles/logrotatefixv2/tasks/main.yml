@@ -1,0 +1,71 @@
+---
+# tasks file for logrotatefix
+
+  - name: check if logrotate SSMM-MF exists
+    copy:
+      content: | 
+             ## CONTENT ADMINISTRATED BY {{ team }} ANSIBLE PLAYBOOK. ALL CHANGES WILL BE LOST
+
+             {
+             }
+      dest: '/etc/logrotate.d/{{ team }}-{{ logrotateName }}'
+      force: "{{ forceMode }}" 
+      group: sys
+      owner: root
+      mode: 0644
+    register: logrotateInfo
+
+  - debug: var=logrotateInfo
+  - name: check if log file exists at filesystem
+    stat:
+      path: "{{ item.path }}{{ item.filename }}"
+    with_items: "{{ logs }}"
+    register: bootPath
+
+#  - debug: var=item.item['wildcard']
+#    with_items: "{{ bootPath.results }}"
+
+  - name: check if .log exists at logrotate {{ team }}-{{ logrotateName }} file
+    lineinfile:
+      path: "{{ logrotateInfo.dest }}"
+      line: "{{ item.item.path }}{{ item.item.wildcard }}"
+      insertbefore: '^{'
+      create: no
+    when: item.stat.exists == true
+    with_items: "{{ bootPath.results }}"
+
+  - name: Adding options to logrotate {{ team }}-{{ logrotateName }} file
+    lineinfile:
+      path: "{{ logrotateInfo.dest }}"
+      line: "     {{ item.option }}"
+      insertbefore: '^}'
+      create: no
+    when: logrotateInfo.state == 'file'
+    with_items: "{{ logrotateOptions }}"
+
+  - name: Adding postrotate-endscript lines to '{{ team }}'-'{{ logrotateName }}' file
+    lineinfile:
+      path: "{{ logrotateInfo.dest }}"
+      line:   |
+
+            postrotate
+            endscript    
+      insertbefore: '^}'
+      create: no
+#    when: deleteEmptyRotated == 'true'
+
+  - name: Adding auto delete (rotated U empty) files to '{{ team }}'-'{{ logrotateName }}' file
+    lineinfile:
+      path: "{{ logrotateInfo.dest }}"
+      line: "     /usr/bin/find /var/log2 -name {{ item.item.wildcard }} -type f -size 0b"
+      insertbefore: '^endscript'
+      create: no
+    when: 
+#      - deleteEmptyRotated == 'true'
+      - item.stat.exists == true
+    with_items: "{{ bootPath.results }}"
+
+  - debug:
+      msg: "{% if logrotateInfo.state == 'file' %} logrotate was succesfully installed at the following path {{ logrotateInfo.dest }}  {% else %} ERROR WAS DETECTED. PLEASE CHECK LOGROTATE FILE {{ logrotateInfo.dest }} OR vars/main.yml role variables {% endif %}"
+
+...
