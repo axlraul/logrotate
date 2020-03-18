@@ -3,7 +3,7 @@
 
 {% for item in bootPath.results %}
 {% if item.stat.exists == true %}
-  {{ item.item.path }}{{ item.item.wildcard }}
+{{ item.item.path }}{{ item.item.wildcard }}
 {% endif %}
 {% endfor %}
   {
@@ -16,15 +16,23 @@ rotate 1
 {% endif %}
 {% endfor %}
 
+{% if ( keepHistoryDays is number and keepHistoryDays > 0 ) or (keepNumberFiles is number and keepNumberFiles > 0) %}
 prerotate
-{% if historyDays %}
+{% if ( keepHistoryDays is number and keepHistoryDays > 0 ) %}
 {% for item in bootPath.results %}
 {% if item.stat.exists == true  %}
-     /usr/bin/find {{ item.item.path }} -name "{{ item.item.wildcard }}*.gz" -type f -mtime +{{ historyDays }} -exec rm -f {} \;
+     /usr/bin/find {{ item.item.path }} -name "{{ item.item.wildcard }}*.gz" -type f -mtime +{{ keepHistoryDays }} -exec rm -f {} \;
 {% endif %}
 {% endfor %}
+{% endif %}
+{% if keepNumberFiles is number and keepNumberFiles > 0 %}
+{% for item in bootPath.results %}
+{% if item.stat.exists == true  %}
+ls -r1 {{ item.item.path }}{{ item.item.wildcard }}*.gz | tail -n +{{ keepNumberFiles +1 }}  | xargs rm -rf --
+{% endif %}
+{% endfor %}
+{% endif %}
 endscript
-
 {% endif %}
 {%if deleteEmptyRotated == true %}
 postrotate
@@ -35,6 +43,5 @@ postrotate
 {% endfor %}
 endscript
 {% endif %}
-
    }
 
