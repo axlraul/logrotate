@@ -5,13 +5,9 @@
 
  logrotateName: 'LOGROTATE-CUSTOM'
 
- deleteEmptyRotated: false 
-#accepted values: true, false
-
- keepHistoryDays: false
-#accepted values: false / [0,1,..]
- keepNumberFiles: false
-#accepted values: false / [0,1,..]
+ deleteEmptyRotated: true 		#accepted values: false / true
+ keepHistoryDays: false			#accepted values: false / [0,1,..]
+ keepNumberFiles: 6			#accepted values: false / [0,1,..]
 
  logrotateOptions:
    - option: 'rotate 1'
@@ -19,6 +15,7 @@
    - option: 'daily'
    - option: 'dateext'
    - option: 'dateformat -%Y-%m-%d.log'
+   - option: 'notifempty'
 
  logs:
    - path:      /var/log/

@@ -28,7 +28,7 @@ prerotate
 {% if keepNumberFiles is number and keepNumberFiles > 0 %}
 {% for item in bootPath.results %}
 {% if item.stat.exists == true  %}
-ls -r1 {{ item.item.path }}{{ item.item.wildcard }}*.gz | tail -n +{{ keepNumberFiles +1 }}  | xargs rm -rf --
+     ls -r1 {{ item.item.path }}{{ item.item.wildcard }}*.gz | tail -n +{{ keepNumberFiles +1 }}  | xargs rm -rf 
 {% endif %}
 {% endfor %}
 {% endif %}
