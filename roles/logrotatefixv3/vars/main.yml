@@ -6,8 +6,8 @@
  logrotateName: 'LOGROTATE-CUSTOM'
 
  deleteEmptyRotated: true 		#accepted values: false / true
- keepHistoryDays: false			#accepted values: false / [0,1,..]
- keepNumberFiles: 6			#accepted values: false / [0,1,..]
+ keepHistoryDays: 3			#accepted values: false / [0,1,..]
+ keepNumberFiles: false			#accepted values: false / [0,1,..]
 
  logrotateOptions:
    - option: 'rotate 1'
